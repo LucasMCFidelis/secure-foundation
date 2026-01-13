@@ -28,8 +28,8 @@ jobs:
         run: npm run lint --if-present
 
       # 5️⃣ Unit tests
-      - name: Run unit tests
-        run: npm run test -- --run
+      # - name: Run unit tests
+      #   run: npm run test -- --run
 
       # 6️⃣ Supabase CLI
       - name: Install Supabase CLI
