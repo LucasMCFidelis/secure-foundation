@@ -1,0 +1,42 @@
+name: CD Base Pipeline
+
+on:
+  workflow_call:
+    secrets:
+      SUPABASE_ACCESS_TOKEN:
+        required: true
+      SUPABASE_PROJECT_REF:
+        required: true
+
+jobs:
+  deploy:
+    environment: pipoca-time-3
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
+
+      - name: Supabase Login
+        run: supabase login --access-token ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Link Supabase Project
+        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+
+      - name: Push database migrations
+        run: supabase db push
+
+      - name: Deploy UI
+        run: npm run deploy

@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  workflow_call:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Node
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3️⃣ Dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4️⃣ Lint (se existir)
+      - name: Run lint
+        run: npm run lint --if-present
+
+      # 5️⃣ Unit tests
+      - name: Run unit tests
+        run: npm run test -- --run
+
+      # 6️⃣ Supabase CLI
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
+
+      # 7️⃣ Supabase DB tests (RLS, policies, functions)
+      - name: Run Supabase DB tests
+        run: supabase test db
+
+      # 8️⃣ Build (garante que deploy não vai quebrar)
+      - name: Build frontend
+        run: npm run build

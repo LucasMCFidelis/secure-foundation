@@ -1,0 +1,15 @@
+name: CI/CD Production Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    uses: ./.github/workflows/ci-base.yml
+
+  deploy-prod:
+    needs: validate
+    uses: ./.github/workflows/cd-base.yml
+    secrets:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN_PROD }}
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF_PROD }}
