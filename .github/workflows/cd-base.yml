@@ -7,6 +7,8 @@ on:
         required: true
       SUPABASE_PROJECT_REF:
         required: true
+      SUPABASE_DB_PASSWORD:
+        required: true
 
 jobs:
   deploy:
@@ -36,6 +38,8 @@ jobs:
         run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
 
       - name: Push database migrations
+        env:
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: supabase db push
 
       - name: Deploy UI
