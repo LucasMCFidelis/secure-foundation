@@ -35,10 +35,14 @@ jobs:
       - name: Install Supabase CLI
         uses: supabase/setup-cli@v1
 
-      # 7️⃣ Supabase DB tests (RLS, policies, functions)
+       # 7️⃣ Start Supabase local
+      - name: Start Supabase local
+        run: supabase start
+
+      # 8️⃣ Supabase DB tests (RLS, policies, functions)
       - name: Run Supabase DB tests
         run: supabase test db
 
-      # 8️⃣ Build (garante que deploy não vai quebrar)
+      # 9️⃣ Build (garante que deploy não vai quebrar)
       - name: Build frontend
         run: npm run build
