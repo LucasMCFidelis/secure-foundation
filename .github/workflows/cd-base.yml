@@ -2,12 +2,18 @@ name: CD Base Pipeline
 
 on:
   workflow_call:
+    inputs:
+      deploy_env:
+        required: true
+        type: string
     secrets:
       SUPABASE_ACCESS_TOKEN:
         required: true
       SUPABASE_PROJECT_REF:
         required: true
       SUPABASE_DB_PASSWORD:
+        required: true
+      VERCEL_TOKEN:
         required: true
 
 jobs:
@@ -42,5 +48,21 @@ jobs:
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: supabase db push
 
-      - name: Deploy UI
-        run: npm run deploy
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Build Project Artifacts
+        run: |
+          if [ "${{ inputs.deploy_env }}" = "prod" ]; then
+            vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          else
+            vercel build --token=${{ secrets.VERCEL_TOKEN }}
+          fi
+
+      - name: Deploy UI to Vercel
+        run: |
+          if [ "${{ inputs.deploy_env }}" = "prod" ]; then
+            vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+          else
+            vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} --yes
+          fi

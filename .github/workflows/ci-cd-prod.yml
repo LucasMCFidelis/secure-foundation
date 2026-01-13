@@ -10,7 +10,10 @@ jobs:
   deploy-prod:
     needs: validate
     uses: ./.github/workflows/cd-base.yml
+    with:
+      deploy_env: prod
     secrets:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN_PROD }}
       SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF_PROD }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD_PROD }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
