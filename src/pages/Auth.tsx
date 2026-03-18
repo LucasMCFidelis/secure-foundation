@@ -69,7 +69,8 @@ const Auth = () => {
           if (error.message.includes('User already registered')) {
             setError('Este email já está cadastrado');
           } else {
-            setError(error.message);
+            console.error('Sign-up error:', error.message);
+            setError('Ocorreu um erro inesperado. Tente novamente.');
           }
         } else {
           setSuccess('Conta criada com sucesso! Você será redirecionado...');
