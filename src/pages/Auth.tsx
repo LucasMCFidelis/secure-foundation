@@ -59,7 +59,8 @@ const Auth = () => {
           if (error.message.includes('Invalid login credentials')) {
             setError('Email ou senha incorretos');
           } else {
-            setError(error.message);
+            console.error('Sign-in error:', error.message);
+            setError('Ocorreu um erro inesperado. Tente novamente.');
           }
         }
       } else {
